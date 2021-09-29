@@ -1,5 +1,13 @@
 # tw2md
-Small Java application to convert TiddlyWiki Repositories to Obsidian Vaults.
+A small Java application to convert TiddlyWiki Repositories to Obsidian Vaults.
+
+### Usage
+
+```shell
+java -jar tw2md.jar -h
+```
+
+### Help Message
 
 ```shell
 Usage: tw2md [-hV] [--add-titles] [--detect-checklist-headers]
