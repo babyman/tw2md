@@ -1,0 +1,27 @@
+created: 20160331184640237
+modified: 20160331184758623
+tags: [[crew ai]] [[pixel starships]]
+title: Ansible
+type: text/vnd.tiddlywiki
+
+!!External Links
+* http://google.com
+* [[Google|http://google.com]]
+* [[http://google.com]]
+
+!!Internal Links
+* [[Hello World]]
+* [[DL|Hello World]]
+* [[HelloWorld]]
+
+!! Transcode
+
+{{5-star}}
+
+!! Images
+
+[img width=100 height=90 [image.png]]
+[img height=70 width=60 [image.png]]
+[img width=50 [image.png]]
+
+[img [image.png]]
