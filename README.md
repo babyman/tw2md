@@ -12,9 +12,9 @@ java -jar tw2md.jar ~/Documents/tiddlywiki/myWiki ~/Documents/Obsidian/tiddlyWik
 
 ### Rendering Tags
 
-There are a bunch of options that apply to tag conversion because TiddlyWiki has a much more forgiving tag system
+There are a bunch of options that apply to tag conversion because TiddlyWiki has a much more forgiving tagging system.
 
-#### `--illegal-tag-character`, Obsidian only support alphanumeric tags plus 3 special characters (_-/) so most symbols are illegal, this
+#### `--illegal-tag-character`, Obsidian only supports alphanumeric tags plus 3 special characters (_-/) so most symbols are illegal, this
 setting lets you configure that (default is '_').
 
 e.g. `v1.2` => `#v1_2`
@@ -37,7 +37,7 @@ e.g. `Cool Stuff` => `#Cool-Stuff`
 
 These can be combined with the `--space-tag-character` to create a wide variety of naming styles, some examples:
 
-- Train case: `Cool Stuff` = --tag-case-conversion=CAMEL + --space-tag-character='' => `#coolStuff`
+- Camel case: `Cool Stuff` = --tag-case-conversion=CAMEL + --space-tag-character='' => `#coolStuff`
 - Pascal case:`Cool Stuff` = --tag-case-conversion=PASCAL + --space-tag-character='' => `#CoolStuff`
 - Snake case: `Cool Stuff` = --tag-case-conversion=LOWER + --space-tag-character='_' => `#cool_stuff`
 - Kebab case: `Cool Stuff` = --tag-case-conversion=LOWER => `#cool-stuff`
@@ -50,18 +50,18 @@ those to proper check boxed list items was helpful.
 #### `--detect-checklists` setting this flag will render bullet/number lists as checklists if they contain a row that has been
 fully struck out.
 
-![img_2.png](assets/detect_checklists.png)
+![detect_checklists.png](assets/detect_checklists.png)
 
 #### `--detect-checklist-headers` adding this flag will not render checkboxes for bullet list items that have indented children.
 
-![img_3.png](assets/detect_checklists_headers.png)
+![detect_checklists_headers.png](assets/detect_checklists_headers.png)
 
 ### Adding document titles
 
 #### `--add-titles` will add the TiddlyWiki header value to the top of all documents when they are rendered.
 
-#### `--add-titles-tag` can be used to add the header to the top of documents that have been tagged with a specific tag, I have tons of
-quotes that rendered well in the TiddlyWiki UI but not so nicely in Obsidian, this solved that issue
+#### `--add-titles-tag` can be used to add the header to the top of documents that have been tagged with a specific tag, I use this to render tons of
+quotes that presented well in the TiddlyWiki UI but not so nicely in Obsidian.
 
 e.g. `--add-titles-tag=quote`
 
