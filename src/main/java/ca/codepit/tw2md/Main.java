@@ -144,10 +144,11 @@ public class Main implements Callable<Integer> {
 	@Option(names = {"--include-system-tiddlers"}, description = "Include system tiddlers in the output directory.")
 	protected boolean includeSystemTiddlers;
 
-	@Option(names = {"--add-titles"}, description = "Add titles to the top of all output documents.")
+	@Option(names = {"--add-titles"}, description = "Add the TiddlyWiki title as a header to the top of all output documents.")
 	protected boolean addTitles;
 
-	@Option(names = {"--add-titles-tag"}, description = "Add titles to the top of documents when tagged with this tag.")
+	@Option(names = {"--add-titles-tag"}, description = "Add the TiddlyWiki title as a header to the top of documents when" +
+					" tagged with this tag.")
 	protected List<String> addTitlesForTags;
 
 	@Option(names = {"-m", "--map-tag"}, description = "Map tiddlywiki tags into Obsidian vault subdirectories.")
