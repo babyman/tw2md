@@ -4,6 +4,10 @@ Vaults.
 
 ### Building the code
 
+Download the packaged executable .jar here https://github.com/babyman/tw2md/releases.
+
+OR...
+
 You need Java 11 and Maven to build and execute this project, if you don't have them I would recommend using
 [SDKMAN](https://sdkman.io/) it's very simple to install and makes everything easier :).
 
