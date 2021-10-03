@@ -94,14 +94,14 @@ public class Main implements Callable<Integer> {
 	 */
 	@SuppressWarnings("unused")
 	@Parameters(index = "0", description = "The root directory containing the tiddlyWiki 'tiddlers' directory.")
-	private String sourceDirectory;
+	private File sourceDirectory;
 
 	/**
 	 * output root directory
 	 */
 	@SuppressWarnings("unused")
 	@Parameters(index = "1", description = "The output directory were the Obsidian markdown files will be saved.")
-	private String outputDirectory;
+	private File outputDirectory;
 
 	/**
 	 * additional assets to move into the output directory
@@ -173,66 +173,67 @@ public class Main implements Callable<Integer> {
 	public Integer call() throws Exception {
 
 		// make directories
-		if (!new File(outputDirectory).mkdirs()) {
+		if (!outputDirectory.exists() && !outputDirectory.mkdirs()) {
 			log.warn("Failed to create output directory: {}", outputDirectory);
 		}
 
-		assetPath.ifPresent(p -> {
-			final String assetPath = outputDirectory + (p.startsWith(PATH_CHAR) ? p : PATH_CHAR + p);
-			if (!new File(assetPath).mkdirs()) {
-				log.warn("Failed to create asset directory: {}", assetPath);
+		final File assetDir = assetPath.map(p -> {
+			final File aDir = new File(outputDirectory, p);
+			if (!aDir.exists() && !aDir.mkdirs()) {
+				log.warn("Failed to create asset directory: {}", aDir);
 			}
-		});
+			return aDir;
+		}).orElse(outputDirectory);
 
 		for (String mapFolders : tagToFolderMap.values()) {
-			final String journalPath = outputDirectory + (mapFolders.startsWith(PATH_CHAR) ? mapFolders : PATH_CHAR + mapFolders);
-			if (!new File(journalPath).mkdirs()) {
-				log.warn("Failed to create output map directory: {}", journalPath);
+			final File outDir = new File(outputDirectory, mapFolders);
+			if (!outDir.exists() && !outDir.mkdirs()) {
+				log.warn("Failed to create output map directory: {}", outDir);
 			}
 		}
 
-		final String assetPathStr = assetPath.map(s -> s.startsWith(PATH_CHAR) ? s : PATH_CHAR + s).orElse("");
-
-		try (Stream<Path> path = Files.walk(Paths.get(sourceDirectory + TIDDLERS_DIR))) {
+		try (Stream<Path> path = Files.walk(new File(sourceDirectory, TIDDLERS_DIR).toPath())) {
 			System.out.println();
-			path.filter(f -> f.toFile().isFile())
-							.forEach(p -> {
+			path.map(Path::toFile)
+							.filter(File::isFile)
+							.forEach(inFile -> {
 								System.out.print("."); // show progress
 								try {
-									if (!includeSystemTiddlers && p.getFileName().toString().startsWith("$_")) {
-										log.debug("Skipping system tiddler file: {}", p);
-									} else if (p.toString().endsWith(".meta")) {
-										log.debug("Skipping meta file: {}", p);
-									} else if (p.toString().endsWith(TIDDLER_EXT)) {
-										readTiddler(p).ifPresent(tiddler -> {
+									if (!includeSystemTiddlers && inFile.getName().startsWith("$_")) {
+										log.debug("Skipping system tiddler file: {}", inFile);
+									} else if (inFile.toString().endsWith(".meta")) {
+										log.debug("Skipping meta file: {}", inFile);
+									} else if (inFile.toString().endsWith(TIDDLER_EXT)) {
+										readTiddler(inFile.toPath()).ifPresent(tiddler -> {
+											File outFile;
 											try {
-												Path outPath;
 												if (TIDDLYWIKI_TYPE.equals(tiddler.getHeader(TYPE_HEADER))) {
 													// reset open/close tag flags
 													openUnderline = openSub = openSup = true;
-													String inFileName = p.getFileName().toString();
+													String inFileName = inFile.getName();
 													String md = toMarkdown(tiddler, inFileName);
 													String outFileName = inFileName.substring(0, inFileName.length() - TIDDLER_EXT.length()) + MARKDOWN_EXT;
-													outPath = calculateMdFileSavePath(tiddler, outFileName);
-													Files.writeString(outPath, md);
+													outFile = new File(calculateOutputDirectory(tiddler), outFileName);
+													log.debug("Saving tiddler {} -> {}", inFile, outFile);
+													Files.writeString(outFile.toPath(), md);
 												} else {
 													final String header = tiddler.getHeader(TITLE_HEADER);
-													outPath = Paths.get(outputDirectory
-																	+ assetPathStr
-																	+ (header.startsWith(PATH_CHAR) ? header : PATH_CHAR + header));
-													saveBinaryTiddler(tiddler, outPath);
+													outFile = new File(assetDir, header);
+													log.debug("Saving binary tiddler {} -> {}", inFile, outFile);
+													saveBinaryTiddler(tiddler, outFile.toPath());
 												}
 												tiddler.getCreatedTime().ifPresent(ct -> {
 													final ZonedDateTime mt = tiddler.getLastUpdatedTime().orElse(ct);
-													setFileTimestamps(outPath, ct, mt);
+													setFileTimestamps(outFile.toPath(), ct, mt);
 												});
 											} catch (IOException e) {
 												log.error("{}", e.getMessage(), e);
 											}
 										});
 									} else {
-										final String savePath = outputDirectory + assetPathStr + (p.startsWith(PATH_CHAR) ? p.getFileName() : PATH_CHAR + p.getFileName());
-										Files.copy(p, Paths.get(savePath), StandardCopyOption.REPLACE_EXISTING);
+										final Path savePath = new File(assetDir, inFile.getName()).toPath();
+										log.debug("Saving asset {} -> {}", inFile, savePath);
+										Files.copy(inFile.toPath(), savePath, StandardCopyOption.REPLACE_EXISTING);
 									}
 								} catch (IOException e) {
 									log.error("{}", e.getMessage(), e);
@@ -241,26 +242,25 @@ public class Main implements Callable<Integer> {
 		}
 
 		tiddlyWikiAssetsPath.ifPresent(ap -> {
-			final String assetPath = sourceDirectory + ap;
-			final String assetPathRoot = new File(assetPath).getParent();
-			final String outPathRoot = outputDirectory + this.assetPath.orElse("");
-			try (Stream<Path> path = Files.walk(Paths.get(assetPath))) {
-				path.filter(f -> !f.toFile().getName().equals(OSX_DS_STORE_DIR))
-								.forEach(f -> {
+			final File sourceAssetPath = new File(sourceDirectory, ap);
+			final int assetPathRootLen = sourceAssetPath.getAbsolutePath().length();
+			try (Stream<Path> path = Files.walk(sourceAssetPath.toPath())) {
+				path.map(Path::toFile)
+								.filter(f -> !f.getName().equals(OSX_DS_STORE_DIR))
+								.forEach(file -> {
 									System.out.print("."); // show progress
-									final File file = f.toFile();
-									String fStr = file.getAbsolutePath().substring(assetPathRoot.length());
-									final File outFile = new File(outPathRoot, fStr);
+									String localPath = file.getAbsolutePath().substring(assetPathRootLen);
+									final File outFile = new File(assetDir, localPath);
 									if (file.isDirectory()) {
-										if (outFile.mkdirs()) {
+										if (outFile.exists() || outFile.mkdirs()) {
 											log.debug("MKDIR: {}", outFile.getAbsolutePath());
 										} else {
 											log.warn("Failed to MKDIR: {}", outFile.getAbsolutePath());
 										}
 									} else {
-										log.debug("COPY: {} to {}", f, outFile.getAbsolutePath());
 										try {
-											Files.copy(f, outFile.toPath());
+											log.debug("COPY: {} -> {}", file, outFile.getAbsolutePath());
+											Files.copy(file.toPath(), outFile.toPath());
 										} catch (FileAlreadyExistsException e) {
 											log.debug("FILE EXISTS: {}", e.getMessage());
 										} catch (IOException e) {
@@ -279,20 +279,19 @@ public class Main implements Callable<Integer> {
 		return 0;
 	}
 
-	private Path calculateMdFileSavePath(Tiddler tiddler, String outFileName) {
+	private File calculateOutputDirectory(Tiddler tiddler) {
 
 		final List<String> tiddlerTags = splitTags(tiddler.getHeader(TAGS_HEADER));
-		outFileName = outFileName.startsWith(PATH_CHAR) ? outFileName : PATH_CHAR + outFileName;
 
 		for (String tag : tiddlerTags) {
 			String outFolder = tagToFolderMap.get(tag);
 			if (outFolder != null) {
 				outFolder = outFolder.startsWith(PATH_CHAR) ? outFolder : PATH_CHAR + outFolder;
-				return Paths.get(outputDirectory + outFolder + outFileName);
+				return new File(outputDirectory, outFolder);
 			}
 		}
 
-		return Paths.get(outputDirectory + outFileName);
+		return outputDirectory;
 	}
 
 	public Optional<Tiddler> readTiddler(Path p) {
@@ -569,6 +568,7 @@ public class Main implements Callable<Integer> {
 
 		// transcoding
 		s = s.replaceAll("\\{\\{([^]]*)}}", "![[$1]]");
+		s = s.replaceAll("\\{\\{\\{([^}]*)}}}", "`$0`");
 
 		// tag macro
 		s = Pattern.compile("<<tag +([^>]+)>>").matcher(s).replaceAll(m -> renderTag(m.group(1)));
@@ -807,9 +807,9 @@ public class Main implements Callable<Integer> {
 			// it's a numeric tag, must be prefixed
 			newTag = numericTagPrefix + newTag;
 		} else {
-			// sort out illegal characters and spaces, then clean up and doubling of illegal characters or spaces
-			newTag = newTag.replaceAll("[^\\w1-9/_-]", illegalTagCharacterReplacement)
-							.replace(" ", spaceTagCharacterReplacement);
+			// sort out illegal characters and spaces, then clean up any doubling of illegal characters or spaces
+			newTag = newTag.replace(" ", spaceTagCharacterReplacement);
+			newTag = newTag.replaceAll("[^\\w1-9/_-]", illegalTagCharacterReplacement);
 
 			if (!spaceTagCharacterReplacement.isEmpty()) {
 				newTag = newTag.replaceAll(spaceTagCharacterReplacement + "+", spaceTagCharacterReplacement);
