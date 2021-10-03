@@ -2,6 +2,19 @@
 A small Java application to convert [TiddlyWiki](https://tiddlywiki.com/) Repositories to [Obsidian](https://obsidian.md/)
 Vaults.
 
+### Building the code
+
+You need Java 11 and Maven to build and execute this project, if you don't have them I would recommend using
+[SDKMAN](https://sdkman.io/) it's very simple to install and makes everything easier :).
+
+Once you're set clone this repo and build away:
+
+```shell
+mvn clean package
+```
+
+The 'fat' jar can be found in the `target` subdirectory.
+
 ### Usage
 
 ```shell
