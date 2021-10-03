@@ -27,6 +27,8 @@ java -jar tw2md.jar -h
 java -jar tw2md.jar ~/Documents/tiddlywiki/myWiki ~/Documents/Obsidian/tiddlyWiki
 ```
 
+**TIP:** Output to an empty directory and check the generated documents, repeat till you're happy with the output then copy the files into your actual Obsidian Vault.
+
 ### Rendering Tags
 
 There are a bunch of options that apply to tag conversion because TiddlyWiki has a much more forgiving tagging system.
