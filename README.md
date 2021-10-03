@@ -33,20 +33,28 @@ java -jar tw2md.jar ~/Documents/tiddlywiki/myWiki ~/Documents/Obsidian/tiddlyWik
 
 There are a bunch of options that apply to tag conversion because TiddlyWiki has a much more forgiving tagging system.
 
-#### `--illegal-tag-character`, Obsidian only supports alphanumeric tags plus 3 special characters (_-/) so most symbols are illegal, this
+#### `--illegal-tag-character`
+
+Obsidian only supports alphanumeric tags plus 3 special characters (_-/) so most symbols are illegal, this
 setting lets you configure that (default is '_').
 
 e.g. `v1.2` => `#v1_2`
 
-#### `--numeric-tag-prefix`, Obsidian does not support pure numeric tags, this lets you define a prefix for those tags, defaults to 't'. 
+#### `--numeric-tag-prefix`
+
+Obsidian does not support pure numeric tags, this lets you define a prefix for those tags, defaults to 't'. 
 
 e.g. `1973` => `#t1973`
 
-#### `--space-tag-character`, no spaces in Obsidian tags, this is the value to use instead (defaults to '-' but can be set to blank '')
+#### `--space-tag-character`
+
+No spaces in Obsidian tags, this is the value to use instead (defaults to '-' but can be set to blank '')
 
 e.g. `Cool Stuff` => `#Cool-Stuff`
 
-#### `--tag-case-conversion`, case conversion options allowed:
+#### `--tag-case-conversion`
+
+Case conversion options allowed:
 
 - PASCAL, ThisIsPascalCase
 - CAMEL, thisIsCamelCase
@@ -66,32 +74,42 @@ These can be combined with the `--space-tag-character` to create a wide variety 
 TiddlyWiki does not support checklists, Obsidian does.  I often use bullet lists and then strike out items as I do them so converting
 those to proper check boxed list items was helpful.
 
-#### `--detect-checklists` setting this flag will render bullet/number lists as checklists if they contain a row that has been
+#### `--detect-checklists`
+
+Setting this flag will render bullet/number lists as checklists if they contain a row that has been
 fully struck out.
 
 ![detect_checklists.png](assets/detect_checklists.png)
 
-#### `--detect-checklist-headers` adding this flag will not render checkboxes for bullet list items that have indented children.
+#### `--detect-checklist-headers`
+
+Adding this flag will not render checkboxes for bullet list items that have indented children.
 
 ![detect_checklists_headers.png](assets/detect_checklists_headers.png)
 
 ### Adding document titles
 
-#### `--add-titles` will add the TiddlyWiki header value to the top of all documents when they are rendered.
+#### `--add-titles`
 
-#### `--add-titles-tag` can be used to add the header to the top of documents that have been tagged with a specific tag.
+Will add the TiddlyWiki header value to the top of all documents when they are rendered.
 
-I use this to render tons of quotes that presented well in the TiddlyWiki UI but not so nicely in Obsidian.
+#### `--add-titles-tag` 
+
+Can be used to add the header to the top of documents that have been tagged with a specific tag. I use this to render tons of quotes that presented well in the TiddlyWiki UI but not so nicely in Obsidian.
 
 e.g. `--add-titles-tag=quote`
 
 ### Organizing files
 
-#### `--assets-path`, organize any binary assets into a Vault subdirectory, this will include any text encoded assets saved as Tiddlers.
+#### `--assets-path`
+
+Organize any binary assets into a Vault subdirectory, this will include any text encoded assets saved as Tiddlers.
 
 e.g. `--assets-path=/System/Assets`
 
-#### `--map-tag` / `-m`, map tags into Vault directories.
+#### `--map-tag` / `-m`
+
+Map tags into Vault directories.
 
 e.g. `-mJournal=Journal/Daily` will save any Journal tagged documents into the Vault under Journal/Daily. 
 
