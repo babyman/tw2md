@@ -73,8 +73,9 @@ fully struck out.
 
 #### `--add-titles` will add the TiddlyWiki header value to the top of all documents when they are rendered.
 
-#### `--add-titles-tag` can be used to add the header to the top of documents that have been tagged with a specific tag, I use this to render tons of
-quotes that presented well in the TiddlyWiki UI but not so nicely in Obsidian.
+#### `--add-titles-tag` can be used to add the header to the top of documents that have been tagged with a specific tag.
+
+I use this to render tons of quotes that presented well in the TiddlyWiki UI but not so nicely in Obsidian.
 
 e.g. `--add-titles-tag=quote`
 
