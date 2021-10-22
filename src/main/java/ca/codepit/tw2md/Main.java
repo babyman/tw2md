@@ -149,10 +149,10 @@ public class Main implements Callable<Integer> {
 
 	@Option(names = {"--add-titles-tag"}, description = "Add the TiddlyWiki title as a header to the top of documents when" +
 					" tagged with this tag.")
-	protected List<String> addTitlesForTags;
+	protected List<String> addTitlesForTags = new ArrayList<>();
 
 	@Option(names = {"-m", "--map-tag"}, description = "Map tiddlywiki tags into Obsidian vault subdirectories.")
-	protected Map<String, String> tagToFolderMap;
+	protected Map<String, String> tagToFolderMap = new HashMap<>();
 
 //	INTERNAL STATE
 //	================================================================================================================
