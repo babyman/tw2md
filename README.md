@@ -2,7 +2,7 @@
 A small Java application to convert [TiddlyWiki](https://tiddlywiki.com/) Repositories to [Obsidian](https://obsidian.md/)
 Vaults.
 
-### Building the code
+## Building the code
 
 Download the packaged executable .jar here https://github.com/babyman/tw2md/releases.
 
@@ -19,13 +19,32 @@ mvn clean package
 
 The 'fat' jar can be found in the `target` subdirectory.
 
-### Usage
+## Usage
 
-```shell
-java -jar tw2md.jar -h
+### Converting to use TiddlyWiki server
 
-java -jar tw2md.jar ~/Documents/tiddlywiki/myWiki ~/Documents/Obsidian/tiddlyWiki
-```
+If your TiddlyWiki isn't using TiddlyWiki server it must be converted before using `tw2md`.  This is easy to do by following these steps:
+
+1. Download and install [Node.js](https://nodejs.org/en/download):
+  - Open a “Terminal”, run `npm install -g tiddlywiki`.
+    - If an error occurs, run `sudo chown -R $USER /usr/local/lib/node_modules` (that gives you admin privileges for the specific folder).
+    - Run `npm install -g tiddlywiki` again.
+    - Check if it works by running `tiddlywiki --version`.  If everything worked it should show you the version of TiddlyWiki.
+2. Run `tiddlywiki twserver --init server`.  This will create a `twserver` directory (name of your choice) to host the tiddlywiki server files. 
+3. Run `tiddlywiki twserver --listen` to start the server.
+
+Then to convert your TiddlyWiki file into the server:
+1. Open http://127.0.0.1:8080/ in your browser. It should load an empty TiddlyWiki.
+2. Drag your TiddlyWiki file (e.g. "mytiddlywiki.html”) onto the top of the browser window.
+3. Press “import”. This imports all of your Tiddlers into the `twserver` dircetory so we can convert them later.
+4. In Terminal, press `Control + C` to exit the server.
+
+### Running the converter
+
+1. Check that `tw2md.jar` is installed correctly (requires Java 11) `java -jar tw2md.jar -h`
+2. Convert the TiddlyWiki server files to Markdown:
+  -   `java -jar tw2md.jar twserver ~/Documents/Obsidian/tiddlyWiki`
+  -   In the above command a new `~/Documents/Obsidian/tiddlyWiki` directory will be created with converted markdown files.  You can choice any director you wish.
 
 **TIP:** Output to an empty directory and check the generated documents, repeat till you're happy with the output then copy the files into your actual Obsidian Vault.
 
