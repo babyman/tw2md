@@ -190,3 +190,7 @@ Convert TiddlyWiki files to Obsidian compatible markdown files.
                               the tiddlywiki home directory.
   -V, --version             Print version information and exit.
 ```
+
+See also
+
+- The Obsidian form, [Import from TiddlyWiki 5 to Obsidian](https://forum.obsidian.md/t/import-from-tiddlywiki-5-to-obsidian/731).
