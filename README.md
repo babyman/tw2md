@@ -17,11 +17,11 @@ Once you're set clone this repo and build away:
 mvn clean package
 ```
 
-The 'fat' jar can be found in the `target` subdirectory.
+The 'fat' jar `tw2md.jar` can be found in the `target` subdirectory.
 
 ## Usage
 
-### Converting to use TiddlyWiki server
+### Converting single page wiki HTML files to use TiddlyWiki server
 
 If your TiddlyWiki isn't using TiddlyWiki server it must be converted before using `tw2md`.  This is easy to do by following these steps:
 
@@ -39,14 +39,16 @@ Then to convert your TiddlyWiki file into the server:
 3. Press “import”. This imports all of your Tiddlers into the `twserver` dircetory so we can convert them later.
 4. In Terminal, press `Control + C` to exit the server.
 
-### Running the converter
+### Running tw2md.jar
 
 1. Check that `tw2md.jar` is installed correctly (requires Java 11) `java -jar tw2md.jar -h`
 2. Convert the TiddlyWiki server files to Markdown:
-  -   `java -jar tw2md.jar twserver ~/Documents/Obsidian/tiddlyWiki`
-  -   In the above command a new `~/Documents/Obsidian/tiddlyWiki` directory will be created with converted markdown files.  You can choice any director you wish.
+  -   `java -jar tw2md.jar ./twserver ~/Documents/Obsidian/tiddlyWiki`
+  -   In the above command a new `~/Documents/Obsidian/tiddlyWiki` directory will be created with converted markdown files.  You can choose any director you wish.
 
 **TIP:** Output to an empty directory and check the generated documents, repeat till you're happy with the output then copy the files into your actual Obsidian Vault.
+
+## Comandline Option Notes
 
 ### Rendering Tags
 
@@ -55,7 +57,7 @@ There are a bunch of options that apply to tag conversion because TiddlyWiki has
 #### `--illegal-tag-character`
 
 Obsidian only supports alphanumeric tags plus 3 special characters (_-/) so most symbols are illegal, this
-setting lets you configure that (default is '_').
+setting lets you configure that (default is '\_').
 
 e.g. `v1.2` => `#v1_2`
 
@@ -150,10 +152,11 @@ Convert TiddlyWiki files to Obsidian compatible markdown files.
                               'tiddlers' directory.
       <outputDirectory>     The output directory were the Obsidian markdown
                               files will be saved.
-      --add-titles          Add titles to the top of all output documents.
+      --add-titles          Add the TiddlyWiki title as a header to the top of
+                              all output documents.
       --add-titles-tag=<addTitlesForTags>
-                            Add titles to the top of documents when tagged with
-                              this tag.
+                            Add the TiddlyWiki title as a header to the top of
+                              documents when tagged with this tag.
       --assets-path=<assetPath>
                             Collect assets into an Obsidian vault subdirectory,
                               path is relative to the output directory.
