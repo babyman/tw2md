@@ -547,6 +547,7 @@ public class Main implements Callable<Integer> {
 
 		// italic
 		s = s.replaceAll("([^:])//", "$1_");
+		s = s.replaceFirst("^//", "_");
 
 		// external links
 		s = s.replaceAll("\\[\\[([^|]+)\\|(http[^]]+)]]", "[$1]($2)");
