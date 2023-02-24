@@ -26,10 +26,10 @@ class Tiddler {
 		this.body = body;
 
 		this.createdTime = Optional.ofNullable(headers.get("created"))
-						.flatMap(DateTools::zts);
+						.flatMap(DateTools::parseTiddlyWikiTimestampAsSystemZonedDateTime);
 
 		this.lastUpdatedTime = Optional.ofNullable(headers.get("modified"))
-						.flatMap(DateTools::zts);
+						.flatMap(DateTools::parseTiddlyWikiTimestampAsSystemZonedDateTime);
 	}
 
 	public String getHeader(String key) {
